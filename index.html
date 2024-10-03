@@ -69,6 +69,14 @@
             font-size: 18px;
             opacity: 0.8;
         }
+        .char {
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .char.fade-in {
+            opacity: 1;
+        }
         .card-content {
             display: flex;
             justify-content: space-between;
@@ -145,70 +153,125 @@
     </style>
 </head>
 <body>
-    <div class="digital-clock">00:00:00</div>
-    <div class="digital-date"></div>
-    <div class="card">
-        <div class="quote-container">
-           <!--<p class="quote">欲买桂花同载酒，终不似，少年游。</p>
-            <p class="author">《芦叶满汀洲》</p>
-            <p class="author"> —— 唐多令 ——</p>!-->
-            <p class="quote">狗思怡看了不夸，还要打我骂我 晦气玩意</p>
-            <p class="author">《小周记仇本》</p>
-            <p class="author"> —— 小周 ——</p>
-        </div>
-        <div class="card-content">
-            <div class="days-container">
-                <span class="days">0</span>
-                <span class="days-label">天</span>
-            </div>
-            <div class="clock-container">
-                <div class="clock">
-                    <div class="hand hour"></div>
-                    <div class="hand minute"></div>
-                    <div class="hand second"></div>
-                    <div class="clock-center"></div>
-                </div>
-            </div>
-        </div>
-        <div class="date">2024年3月29日</div>
-        <div>纪念日</div>
+<div class="digital-clock">00:00:00</div>
+<div class="digital-date"></div>
+<div class="card">
+    <div class="quote-container">
+        <p class="quote"></p>
+        <p class="source"></p>
+        <p class="author"></p>
     </div>
+    <div class="card-content">
+        <div class="days-container">
+            <span class="days">0</span>
+            <span class="days-label">天</span>
+        </div>
+        <div class="clock-container">
+            <div class="clock">
+                <div class="hand hour"></div>
+                <div class="hand minute"></div>
+                <div class="hand second"></div>
+                <div class="clock-center"></div>
+            </div>
+        </div>
+    </div>
+    <div class="date">2024年3月29日</div>
+    <div>纪念日</div>
+</div>
 
-    <script>
-        const startDate = new Date('2024-03-29');
-        const daysElement = document.querySelector('.days');
-        const dateElement = document.querySelector('.date');
-        const hourHand = document.querySelector('.hour');
-        const minuteHand = document.querySelector('.minute');
-        const secondHand = document.querySelector('.second');
-        const digitalClock = document.querySelector('.digital-clock');
-        const digitalDate = document.querySelector('.digital-date');
+<script>
+    const startDate = new Date('2024-03-29');
+    const daysElement = document.querySelector('.days');
+    const dateElement = document.querySelector('.date');
+    const hourHand = document.querySelector('.hour');
+    const minuteHand = document.querySelector('.minute');
+    const secondHand = document.querySelector('.second');
+    const digitalClock = document.querySelector('.digital-clock');
+    const digitalDate = document.querySelector('.digital-date');
 
-        function updateClock() {
-            const now = new Date();
-            const diff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-            daysElement.textContent = diff;
+    function updateClock() {
+        const now = new Date();
+        const diff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+        daysElement.textContent = diff;
 
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const milliseconds = now.getMilliseconds();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const milliseconds = now.getMilliseconds();
 
-            const hourDeg = (hours % 12 + minutes / 60) * 30;
-            const minuteDeg = (minutes + seconds / 60) * 6;
-            const secondDeg = (seconds + milliseconds / 1000) * 6;
+        const hourDeg = (hours % 12 + minutes / 60) * 30;
+        const minuteDeg = (minutes + seconds / 60) * 6;
+        const secondDeg = (seconds + milliseconds / 1000) * 6;
 
-            hourHand.style.transform = `rotate(${hourDeg}deg)`;
-            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
-            secondHand.style.transform = `rotate(${secondDeg}deg)`;
+        hourHand.style.transform = `rotate(${hourDeg}deg)`;
+        minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+        secondHand.style.transform = `rotate(${secondDeg}deg)`;
 
-            digitalClock.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            digitalDate.textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        digitalClock.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        digitalDate.textContent = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
 
-            requestAnimationFrame(updateClock);
+        requestAnimationFrame(updateClock);
+    }
+
+    updateClock();
+
+    const quotes = [
+        {
+            text: "狗思怡看了不夸，还要打我骂我 晦气玩意",
+            author: "小周",
+            source: "《小周记仇本》"
+        },
+        {
+            text: "欲买桂花同载酒，终不似，少年游。",
+            author: "唐多令",
+            source: "《芦叶满汀洲》"
+        },
+        {
+            text: "人生若只如初见，何事秋风悲画扇。",
+            author: "纳兰性德",
+            source: "《木兰词》"
         }
+    ];
 
-        updateClock();
-    </script>
+    let currentQuoteIndex = 0;
+    const quoteElement = document.querySelector('.quote');
+    const authorElement = document.querySelector('.author');
+    const sourceElement = document.querySelector('.source');
+    const quoteContainer = document.querySelector('.quote-container');
+
+    function updateQuote(isHover = false) {
+        const quote = quotes[currentQuoteIndex];
+        quoteElement.innerHTML = '';
+        authorElement.textContent = `—— ${quote.author} ——`;
+        sourceElement.textContent = quote.source;
+        quote.text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.className = 'char';
+            quoteElement.appendChild(span);
+            setTimeout(() => {
+                span.classList.add('fade-in');
+            }, isHover ? index * 50 : index * 100);
+        });
+    }
+
+    function rotateQuote() {
+        currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+        updateQuote();
+    }
+
+    updateQuote();
+    setInterval(rotateQuote, 10000); // 每10秒轮换一次引用
+
+    quoteElement.addEventListener('mouseenter', () => {
+        updateQuote(true);
+    });
+
+    quoteContainer.addEventListener('mouseleave', () => {
+        const chars = quoteElement.querySelectorAll('.char');
+        chars.forEach(char => char.classList.remove('fade-in'));
+        setTimeout(() => updateQuote(), 300);
+    });
+</script>
 </body>
 </html>
